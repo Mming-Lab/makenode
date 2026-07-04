@@ -1,27 +1,29 @@
-# MakeNode（ベータ版 / Beta）
+🇺🇸 English | [🇯🇵 日本語](README.ja.md)
 
-Minecraft Education Edition 向けの、子ども向けビジュアルプログラミングツールです。
-ノードをつないで Minecraft を動かせます（Scratch / Flyde 的なノードエディタ）。
+# MakeNode (Beta)
 
-> ⚠️ **ベータ版です。** まだテストが十分ではなく、動作が不安定だったり、今後仕様が変わることがあります。
-> 大事なデータはこまめに保存してください。不具合を見つけたら [Issue](../../issues) で教えていただけると助かります。
+A kid-friendly visual programming tool for Minecraft Education Edition.
+Connect nodes to control Minecraft — a Scratch / Flyde–style node editor.
+
+> ⚠️ **This is a beta.** It is not fully tested yet, so it may be unstable and its behavior may change.
+> Please save your work often, and report any problems on the [Issues](../../issues) page.
 
 > **NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.**
 
-## ダウンロード
+## Download
 
-最新のベータ版は [Releases](../../releases) から入手できます（Windows インストーラ）。
-インストール後は自動更新に対応しています。
+Get the latest beta from [Releases](../../releases) (Windows installer).
+The app updates itself automatically after installation.
 
-## ライセンス / 利用条件
+## License / Terms
 
-[Prosperity Public License 3.0.0](LICENSE.md) で提供しています。
+Provided under the [Prosperity Public License 3.0.0](LICENSE.md).
 
-- 🎓 **教育機関での利用は無償**（学校など。資金源を問いません）
-- 🏠 **個人・非商用の利用も無償**
-- 💼 **商用利用は30日間の試用が可能**。継続する場合は商用ライセンスが必要です（mming.lab@gmail.com）
-- 🎥 **動画・配信などのコンテンツ制作は自由**（収益化・プラットフォーム自由）— [コンテンツ制作ポリシー](CONTENT-POLICY.md)
+- 🎓 **Free for educational institutions** (schools, etc. — regardless of funding source)
+- 🏠 **Free for personal and non-commercial use**
+- 💼 **Commercial use may be trialed for 30 days.** A commercial license is required to continue (mming.lab@gmail.com)
+- 🎥 **Content creation (videos, streams, etc.) is allowed** — monetization and any platform is fine. See the [Content Creation Policy](CONTENT-POLICY.md)
 
-## お問い合わせ
+## Contact
 
-商用ライセンス・不具合報告・ご質問は [Issue](../../issues) または mming.lab@gmail.com まで。
+For commercial licensing, bug reports, or questions: open an [Issue](../../issues) or email mming.lab@gmail.com.
