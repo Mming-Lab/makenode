@@ -19,10 +19,9 @@ The app updates itself automatically after installation.
 
 Provided under the [Prosperity Public License 3.0.0](LICENSE.md).
 
-- 🎓 **Free for educational institutions** (schools, etc. — regardless of funding source)
-- 🏠 **Free for personal and non-commercial use**
-- 💼 **Commercial use may be trialed for 30 days.** A commercial license is required to continue (mming.lab@gmail.com)
-- 🎥 **Content creation (videos, streams, etc.) is allowed** — monetization and any platform is fine. See the [Content Creation Policy](CONTENT-POLICY.md)
+- ✅ **Free forever for non-commercial purposes** — individuals, schools, and public institutions, etc.
+- 💼 **Commercial use** — for-profit tutoring services, cram schools (juku), coding schools, corporate training, contract work, and the like — **may be trialed for 30 days**, after which a commercial license is required (mming.lab@gmail.com)
+- 🎥 **Content creation** (videos, streams, articles, etc.) is explicitly allowed, **including monetization** — see the [Content Creation Policy](CONTENT-POLICY.md). A mention of Mming Lab / MakeNode is appreciated!
 
 ## Contact
 
