@@ -1,0 +1,290 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "c865cf64af38fd4e",
+      "nodeId": "GetPlayerLocation",
+      "x": 12,
+      "y": 599.5,
+      "config": {}
+    },
+    {
+      "id": "2be1eddc3e8323ca",
+      "nodeId": "Selector",
+      "x": 910.1999999999999,
+      "y": 536.5,
+      "config": {
+        "type": {
+          "type": "value",
+          "value": "block"
+        },
+        "block": {
+          "type": "value",
+          "value": "minecraft:black_stained_glass"
+        }
+      }
+    },
+    {
+      "id": "5a349721dd4b1619",
+      "nodeId": "PlaceBlocksAtPositions",
+      "x": 1232.3,
+      "y": 152.5,
+      "config": {
+        "positions": {
+          "type": "template",
+          "template": "{{positions}}"
+        },
+        "block_id": {
+          "type": "template",
+          "template": "{{block_id}}"
+        },
+        "mode": {
+          "type": "value",
+          "value": "default"
+        },
+        "wait": {
+          "type": "value",
+          "value": "true"
+        }
+      }
+    },
+    {
+      "id": "9d9db5799165f397",
+      "nodeId": "Vector3Op",
+      "x": 303.4,
+      "y": 628.5,
+      "config": {
+        "op": {
+          "type": "value",
+          "value": "add"
+        },
+        "pos_a": {
+          "type": "template",
+          "template": "{{pos_a}}"
+        },
+        "pos_b": {
+          "type": "template",
+          "template": "{{pos_b}}"
+        }
+      }
+    },
+    {
+      "id": "cd00b504cdc8f819",
+      "nodeId": "ConcatLists",
+      "x": 910.1999999999999,
+      "y": 358.5,
+      "config": {
+        "listA": {
+          "type": "template",
+          "template": "{{listA}}"
+        },
+        "listB": {
+          "type": "template",
+          "template": "{{listB}}"
+        }
+      }
+    },
+    {
+      "id": "b43e305428785467",
+      "nodeId": "Vector3Op",
+      "x": 12,
+      "y": 741.5,
+      "config": {
+        "op": {
+          "type": "value",
+          "value": "assemble"
+        },
+        "x": {
+          "type": "value",
+          "value": "10"
+        },
+        "y": {
+          "type": "value",
+          "value": "15"
+        },
+        "z": {
+          "type": "value",
+          "value": "0"
+        }
+      }
+    },
+    {
+      "id": "d439e9eefae62015",
+      "nodeId": "MinecraftConnect",
+      "x": 614.3,
+      "y": 85,
+      "config": {
+        "port": {
+          "type": "value",
+          "value": "8888"
+        }
+      }
+    },
+    {
+      "id": "8198f2739d92d2a0",
+      "nodeId": "ShapePositions",
+      "x": 614.3,
+      "y": 267,
+      "config": {
+        "shape": {
+          "type": "value",
+          "value": "sphere"
+        },
+        "center": {
+          "type": "template",
+          "template": "{{center}}"
+        },
+        "radius": {
+          "type": "value",
+          "value": "5"
+        },
+        "hollow": {
+          "type": "value",
+          "value": false
+        }
+      }
+    },
+    {
+      "id": "6964ff0b3e21fd37",
+      "nodeId": "ShapePositions",
+      "x": 614.3,
+      "y": 529,
+      "config": {
+        "shape": {
+          "type": "value",
+          "value": "torus"
+        },
+        "center": {
+          "type": "template",
+          "template": "{{center}}"
+        },
+        "hollow": {
+          "type": "value",
+          "value": false
+        },
+        "majorRadius": {
+          "type": "value",
+          "value": "8"
+        },
+        "minorRadius": {
+          "type": "value",
+          "value": "3"
+        }
+      }
+    },
+    {
+      "id": "d680d056a87bcf1a",
+      "nodeId": "OnPlayerChat",
+      "x": 910.1999999999999,
+      "y": 12,
+      "config": {
+        "world": {
+          "type": "template",
+          "template": "{{world}}"
+        }
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from": {
+        "nodeId": "2be1eddc3e8323ca",
+        "output": "value"
+      },
+      "to": {
+        "nodeId": "5a349721dd4b1619",
+        "input": "block_id"
+      }
+    },
+    {
+      "from": {
+        "nodeId": "cd00b504cdc8f819",
+        "output": "list"
+      },
+      "to": {
+        "nodeId": "5a349721dd4b1619",
+        "input": "positions"
+      }
+    },
+    {
+      "from": {
+        "nodeId": "9d9db5799165f397",
+        "output": "result"
+      },
+      "to": {
+        "nodeId": "8198f2739d92d2a0",
+        "input": "center"
+      }
+    },
+    {
+      "from": {
+        "nodeId": "9d9db5799165f397",
+        "output": "result"
+      },
+      "to": {
+        "nodeId": "6964ff0b3e21fd37",
+        "input": "center"
+      }
+    },
+    {
+      "from": {
+        "nodeId": "6964ff0b3e21fd37",
+        "output": "positions"
+      },
+      "to": {
+        "nodeId": "cd00b504cdc8f819",
+        "input": "listB"
+      }
+    },
+    {
+      "from": {
+        "nodeId": "8198f2739d92d2a0",
+        "output": "positions"
+      },
+      "to": {
+        "nodeId": "cd00b504cdc8f819",
+        "input": "listA"
+      }
+    },
+    {
+      "from": {
+        "nodeId": "d439e9eefae62015",
+        "output": "world"
+      },
+      "to": {
+        "nodeId": "d680d056a87bcf1a",
+        "input": "world"
+      }
+    },
+    {
+      "from": {
+        "nodeId": "d680d056a87bcf1a",
+        "output": "message"
+      },
+      "to": {
+        "nodeId": "5a349721dd4b1619",
+        "input": "trigger"
+      }
+    },
+    {
+      "from": {
+        "nodeId": "c865cf64af38fd4e",
+        "output": "position"
+      },
+      "to": {
+        "nodeId": "9d9db5799165f397",
+        "input": "pos_a"
+      }
+    },
+    {
+      "from": {
+        "nodeId": "b43e305428785467",
+        "output": "result"
+      },
+      "to": {
+        "nodeId": "9d9db5799165f397",
+        "input": "pos_b"
+      }
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "ccbac107cace4f62",
+      "nodeId": "MinecraftConnect",
+      "x": 12,
+      "y": 280,
+      "config": {
+        "port": {
+          "type": "value",
+          "value": "8888"
+        }
+      }
+    },
+    {
+      "id": "2a8894fe7af4544d",
+      "nodeId": "OnPlayerChat",
+      "x": 282,
+      "y": 207,
+      "config": {
+        "world": {
+          "type": "template",
+          "template": "{{world}}"
+        }
+      }
+    },
+    {
+      "id": "f6c80e7c4664cc5e",
+      "nodeId": "Switch",
+      "x": 552,
+      "y": 13,
+      "config": {
+        "value": {
+          "type": "template",
+          "template": "{{value}}"
+        },
+        "caseCount": {
+          "type": "value",
+          "value": "2"
+        },
+        "case1": {
+          "type": "value",
+          "value": "dis"
+        },
+        "case2": {
+          "type": "value",
+          "value": "chicken"
+        }
+      }
+    },
+    {
+      "id": "ba4dbb7c40beb1f4",
+      "nodeId": "MinecraftDisconnect",
+      "x": 888.8,
+      "y": 12,
+      "config": {}
+    },
+    {
+      "id": "742336fad4fc808d",
+      "nodeId": "RunCommand",
+      "x": 888.8,
+      "y": 269,
+      "config": {
+        "command": {
+          "type": "template",
+          "template": "{{command}}"
+        },
+        "wait": {
+          "type": "value",
+          "value": "true"
+        }
+      }
+    },
+    {
+      "id": "722eb61b5acaf400",
+      "nodeId": "Repeat",
+      "x": 282,
+      "y": 456,
+      "config": {
+        "value": {
+          "type": "value",
+          "value": "summon chicken ~ ~10 ~"
+        },
+        "count": {
+          "type": "value",
+          "value": "100"
+        }
+      }
+    },
+    {
+      "id": "f8ec61e714dce5b1",
+      "nodeId": "LoopList",
+      "x": 552,
+      "y": 347,
+      "config": {
+        "list": {
+          "type": "template",
+          "template": "{{list}}"
+        }
+      }
+    }
+  ],
+  "connections": [
+    {
+      "from": {
+        "nodeId": "ccbac107cace4f62",
+        "output": "world"
+      },
+      "to": {
+        "nodeId": "2a8894fe7af4544d",
+        "input": "world"
+      }
+    },
+    {
+      "from": {
+        "nodeId": "2a8894fe7af4544d",
+        "output": "message"
+      },
+      "to": {
+        "nodeId": "f6c80e7c4664cc5e",
+        "input": "value"
+      }
+    },
+    {
+      "from": {
+        "nodeId": "722eb61b5acaf400",
+        "output": "list"
+      },
+      "to": {
+        "nodeId": "f8ec61e714dce5b1",
+        "input": "list"
+      }
+    },
+    {
+      "from": {
+        "nodeId": "f8ec61e714dce5b1",
+        "output": "item"
+      },
+      "to": {
+        "nodeId": "742336fad4fc808d",
+        "input": "command"
+      }
+    },
+    {
+      "from": {
+        "nodeId": "f6c80e7c4664cc5e",
+        "output": "case1"
+      },
+      "to": {
+        "nodeId": "ba4dbb7c40beb1f4",
+        "input": "trigger"
+      }
+    },
+    {
+      "from": {
+        "nodeId": "f6c80e7c4664cc5e",
+        "output": "case2"
+      },
+      "to": {
+        "nodeId": "742336fad4fc808d",
+        "input": "trigger"
+      }
+    }
+  ]
+}
