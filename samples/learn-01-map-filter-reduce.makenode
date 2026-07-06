@@ -1,0 +1,150 @@
+{
+ "version": 2,
+ "nodes": [
+  {
+   "id": "range", "nodeId": "ListRange", "x": 0, "y": 0,
+   "config": { "from": { "type": "value", "value": 1 }, "to": { "type": "value", "value": 10 } }
+  },
+  { "id": "map", "nodeId": "ListMap", "x": 350, "y": 0, "config": {} },
+  { "id": "filter", "nodeId": "ListFilter", "x": 700, "y": 0, "config": {} },
+  {
+   "id": "reduce", "nodeId": "ListReduce", "x": 1050, "y": 0,
+   "config": { "initial": { "type": "value", "value": 0 } }
+  },
+  {
+   "id": "logd", "nodeId": "LogValue", "x": 1400, "y": 0,
+   "config": { "label": { "type": "value", "value": "宣言的な合計" } }
+  },
+  { "id": "refdouble", "nodeId": "FunctionRef", "x": 0, "y": 250, "config": { "functionId": { "type": "value", "value": "fn-double" } } },
+  { "id": "refbig", "nodeId": "FunctionRef", "x": 350, "y": 250, "config": { "functionId": { "type": "value", "value": "fn-big" } } },
+  { "id": "refadd", "nodeId": "FunctionRef", "x": 700, "y": 250, "config": { "functionId": { "type": "value", "value": "fn-add" } } },
+  {
+   "id": "range2", "nodeId": "ListRange", "x": 0, "y": 600,
+   "config": { "from": { "type": "value", "value": 1 }, "to": { "type": "value", "value": 10 } }
+  },
+  { "id": "loop", "nodeId": "LoopList", "x": 350, "y": 600, "config": {} },
+  {
+   "id": "mul", "nodeId": "MathOperation", "x": 700, "y": 600,
+   "config": { "operation": { "type": "value", "value": "multiply" }, "n2": { "type": "value", "value": 2 } }
+  },
+  {
+   "id": "cmp", "nodeId": "MathOperation", "x": 700, "y": 800,
+   "config": { "operation": { "type": "value", "value": "greaterThan" }, "n2": { "type": "value", "value": 5 } }
+  },
+  {
+   "id": "pick", "nodeId": "IfValue", "x": 1050, "y": 600,
+   "config": { "elseValue": { "type": "value", "value": 0 } }
+  },
+  {
+   "id": "getsum", "nodeId": "GetGlobalState", "x": 1050, "y": 850,
+   "config": { "key": { "type": "value", "value": "sum" }, "defaultValue": { "type": "value", "value": 0 } }
+  },
+  {
+   "id": "addsum", "nodeId": "MathOperation", "x": 1400, "y": 700,
+   "config": { "operation": { "type": "value", "value": "add" } }
+  },
+  {
+   "id": "setsum", "nodeId": "SetGlobalState", "x": 1750, "y": 700,
+   "config": { "key": { "type": "value", "value": "sum" } }
+  },
+  {
+   "id": "logi", "nodeId": "LogValue", "x": 2100, "y": 700,
+   "config": { "label": { "type": "value", "value": "命令的な合計（途中経過）" } }
+  }
+ ],
+ "connections": [
+  { "from": { "nodeId": "range", "output": "list" }, "to": { "nodeId": "map", "input": "list" } },
+  { "from": { "nodeId": "refdouble", "output": "fn" }, "to": { "nodeId": "map", "input": "fn" } },
+  { "from": { "nodeId": "map", "output": "list" }, "to": { "nodeId": "filter", "input": "list" } },
+  { "from": { "nodeId": "refbig", "output": "fn" }, "to": { "nodeId": "filter", "input": "fn" } },
+  { "from": { "nodeId": "filter", "output": "list" }, "to": { "nodeId": "reduce", "input": "list" } },
+  { "from": { "nodeId": "refadd", "output": "fn" }, "to": { "nodeId": "reduce", "input": "fn" } },
+  { "from": { "nodeId": "reduce", "output": "result" }, "to": { "nodeId": "logd", "input": "value" } },
+  { "from": { "nodeId": "range2", "output": "list" }, "to": { "nodeId": "loop", "input": "list" } },
+  { "from": { "nodeId": "loop", "output": "item" }, "to": { "nodeId": "mul", "input": "n1" } },
+  { "from": { "nodeId": "mul", "output": "result" }, "to": { "nodeId": "cmp", "input": "n1" } },
+  { "from": { "nodeId": "cmp", "output": "result" }, "to": { "nodeId": "pick", "input": "condition" } },
+  { "from": { "nodeId": "mul", "output": "result" }, "to": { "nodeId": "pick", "input": "thenValue" } },
+  { "from": { "nodeId": "getsum", "output": "value" }, "to": { "nodeId": "addsum", "input": "n1" } },
+  { "from": { "nodeId": "pick", "output": "result" }, "to": { "nodeId": "addsum", "input": "n2" } },
+  { "from": { "nodeId": "addsum", "output": "result" }, "to": { "nodeId": "setsum", "input": "value" } },
+  { "from": { "nodeId": "setsum", "output": "setValue" }, "to": { "nodeId": "logi", "input": "value" } }
+ ],
+ "comments": [
+  {
+   "id": "c-title", "x": 0, "y": -260, "links": [],
+   "text": "教材01: 変換 → 絞り込み → 集約（Map / Filter / Reduce）\n1〜10 の数列を「2倍にする → 5より大きいものだけ残す → 合計する」の3段で処理します。\n上の段（宣言的）と下の段（命令的）は同じ答え（104）になります。実行してログを見比べてみましょう。"
+  },
+  {
+   "id": "c-decl", "links": ["range", "map", "filter", "reduce", "logd"], "x": 0, "y": 0,
+   "text": "宣言的（ループなし）: 「何をするか」を3つのノードで並べるだけ。途中の変数がないので、間違えにくく読みやすい書き方です。"
+  },
+  {
+   "id": "c-imp", "links": ["range2", "loop", "mul", "cmp", "pick", "getsum", "addsum", "setsum", "logi"], "x": 0, "y": 600,
+   "text": "命令的（ループと変数）: 1個ずつ取り出して、変数 sum に足し込みます。同じ結果ですが、ノードの数が増え、変数の状態を頭の中で追いかける必要があります。"
+  }
+ ],
+ "functions": [
+  {
+   "id": "fn-double",
+   "name": "2倍にする",
+   "description": "n を2倍にして返します",
+   "params": [{ "key": "p1", "label": "n" }],
+   "results": [{ "key": "r1", "label": "result" }],
+   "nodes": [
+    { "id": "fs", "nodeId": "FunctionStart", "x": 0, "y": 0, "config": {} },
+    {
+     "id": "mul", "nodeId": "MathOperation", "x": 350, "y": 0,
+     "config": { "operation": { "type": "value", "value": "multiply" }, "n2": { "type": "value", "value": 2 } }
+    },
+    { "id": "fe", "nodeId": "FunctionEnd", "x": 700, "y": 0, "config": {} }
+   ],
+   "connections": [
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "mul", "input": "n1" } },
+    { "from": { "nodeId": "mul", "output": "result" }, "to": { "nodeId": "fe", "input": "r1" } }
+   ]
+  },
+  {
+   "id": "fn-big",
+   "name": "5より大きい？",
+   "description": "n が 5 より大きければ真を返します（絞り込みの条件）",
+   "params": [{ "key": "p1", "label": "n" }],
+   "results": [{ "key": "r1", "label": "result" }],
+   "nodes": [
+    { "id": "fs", "nodeId": "FunctionStart", "x": 0, "y": 0, "config": {} },
+    {
+     "id": "cmp", "nodeId": "MathOperation", "x": 350, "y": 0,
+     "config": { "operation": { "type": "value", "value": "greaterThan" }, "n2": { "type": "value", "value": 5 } }
+    },
+    { "id": "fe", "nodeId": "FunctionEnd", "x": 700, "y": 0, "config": {} }
+   ],
+   "connections": [
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "cmp", "input": "n1" } },
+    { "from": { "nodeId": "cmp", "output": "result" }, "to": { "nodeId": "fe", "input": "r1" } }
+   ]
+  },
+  {
+   "id": "fn-add",
+   "name": "足す",
+   "description": "a と b を足します（集約に使う）",
+   "params": [
+    { "key": "p1", "label": "a" },
+    { "key": "p2", "label": "b" }
+   ],
+   "results": [{ "key": "r1", "label": "result" }],
+   "nodes": [
+    { "id": "fs", "nodeId": "FunctionStart", "x": 0, "y": 0, "config": {} },
+    {
+     "id": "add", "nodeId": "MathOperation", "x": 350, "y": 0,
+     "config": { "operation": { "type": "value", "value": "add" } }
+    },
+    { "id": "fe", "nodeId": "FunctionEnd", "x": 700, "y": 0, "config": {} }
+   ],
+   "connections": [
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "add", "input": "n1" } },
+    { "from": { "nodeId": "fs", "output": "p2" }, "to": { "nodeId": "add", "input": "n2" } },
+    { "from": { "nodeId": "add", "output": "result" }, "to": { "nodeId": "fe", "input": "r1" } }
+   ]
+  }
+ ]
+}

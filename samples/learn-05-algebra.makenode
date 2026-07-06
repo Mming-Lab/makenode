@@ -1,0 +1,119 @@
+{
+ "version": 2,
+ "nodes": [
+  { "id": "refd", "nodeId": "FunctionRef", "x": 0, "y": 0, "config": { "functionId": { "type": "value", "value": "fn-double" } } },
+  { "id": "refa", "nodeId": "FunctionRef", "x": 0, "y": 200, "config": { "functionId": { "type": "value", "value": "fn-addten" } } },
+  {
+   "id": "mapd", "nodeId": "ListMap", "x": 350, "y": 0,
+   "config": { "list": { "type": "value", "value": [1, 2, 3] } }
+  },
+  { "id": "mapa", "nodeId": "ListMap", "x": 700, "y": 0, "config": {} },
+  { "id": "comp", "nodeId": "Compose", "x": 350, "y": 300, "config": {} },
+  {
+   "id": "mapc", "nodeId": "ListMap", "x": 700, "y": 300,
+   "config": { "list": { "type": "value", "value": [1, 2, 3] } }
+  },
+  {
+   "id": "afusion", "nodeId": "Assert", "x": 1050, "y": 150,
+   "config": {
+    "op": { "type": "value", "value": "deep" },
+    "testId": { "type": "value", "value": "融合法則: map(g)∘map(f) = map(g∘f)" }
+   }
+  },
+  { "id": "c1inner", "nodeId": "Compose", "x": 0, "y": 700, "config": {} },
+  { "id": "c1", "nodeId": "Compose", "x": 350, "y": 700, "config": {} },
+  { "id": "c2inner", "nodeId": "Compose", "x": 0, "y": 950, "config": {} },
+  { "id": "c2", "nodeId": "Compose", "x": 350, "y": 950, "config": {} },
+  {
+   "id": "apply1", "nodeId": "Apply", "x": 700, "y": 700,
+   "config": { "args": { "type": "value", "value": [5] } }
+  },
+  {
+   "id": "apply2", "nodeId": "Apply", "x": 700, "y": 950,
+   "config": { "args": { "type": "value", "value": [5] } }
+  },
+  {
+   "id": "aassoc", "nodeId": "Assert", "x": 1050, "y": 800,
+   "config": {
+    "op": { "type": "value", "value": "eq" },
+    "testId": { "type": "value", "value": "結合則: (f∘g)∘f = f∘(g∘f)" }
+   }
+  }
+ ],
+ "connections": [
+  { "from": { "nodeId": "refd", "output": "fn" }, "to": { "nodeId": "mapd", "input": "fn" } },
+  { "from": { "nodeId": "mapd", "output": "list" }, "to": { "nodeId": "mapa", "input": "list" } },
+  { "from": { "nodeId": "refa", "output": "fn" }, "to": { "nodeId": "mapa", "input": "fn" } },
+  { "from": { "nodeId": "refd", "output": "fn" }, "to": { "nodeId": "comp", "input": "first" } },
+  { "from": { "nodeId": "refa", "output": "fn" }, "to": { "nodeId": "comp", "input": "second" } },
+  { "from": { "nodeId": "comp", "output": "fn" }, "to": { "nodeId": "mapc", "input": "fn" } },
+  { "from": { "nodeId": "mapa", "output": "list" }, "to": { "nodeId": "afusion", "input": "actual" } },
+  { "from": { "nodeId": "mapc", "output": "list" }, "to": { "nodeId": "afusion", "input": "expected" } },
+  { "from": { "nodeId": "refd", "output": "fn" }, "to": { "nodeId": "c1inner", "input": "first" } },
+  { "from": { "nodeId": "refa", "output": "fn" }, "to": { "nodeId": "c1inner", "input": "second" } },
+  { "from": { "nodeId": "c1inner", "output": "fn" }, "to": { "nodeId": "c1", "input": "first" } },
+  { "from": { "nodeId": "refd", "output": "fn" }, "to": { "nodeId": "c1", "input": "second" } },
+  { "from": { "nodeId": "refa", "output": "fn" }, "to": { "nodeId": "c2inner", "input": "first" } },
+  { "from": { "nodeId": "refd", "output": "fn" }, "to": { "nodeId": "c2inner", "input": "second" } },
+  { "from": { "nodeId": "refd", "output": "fn" }, "to": { "nodeId": "c2", "input": "first" } },
+  { "from": { "nodeId": "c2inner", "output": "fn" }, "to": { "nodeId": "c2", "input": "second" } },
+  { "from": { "nodeId": "c1", "output": "fn" }, "to": { "nodeId": "apply1", "input": "fn" } },
+  { "from": { "nodeId": "c2", "output": "fn" }, "to": { "nodeId": "apply2", "input": "fn" } },
+  { "from": { "nodeId": "apply1", "output": "result" }, "to": { "nodeId": "aassoc", "input": "actual" } },
+  { "from": { "nodeId": "apply2", "output": "result" }, "to": { "nodeId": "aassoc", "input": "expected" } }
+ ],
+ "comments": [
+  {
+   "id": "c-title", "x": 0, "y": -320, "links": [],
+   "text": "教材05: 代数法則 — プログラムは計算できる数式\n関数どうしの法則が本当に成り立つかを、Assert（検証ノード）で機械的に確かめます。\n実行してログに PASS が2つ出れば、法則の証明実験は成功です。"
+  },
+  {
+   "id": "c-fusion", "links": ["refd", "refa", "mapd", "mapa", "comp", "mapc", "afusion"], "x": 0, "y": 0,
+   "text": "融合法則: 「2倍にしてから +10」を2回の変換（Map）でやっても、先に関数を合成（Compose）して1回の変換でやっても、結果は同じ [12,14,16]。変換の回数を減らせる＝プログラムを数式のように変形してよい、ということです。"
+  },
+  {
+   "id": "c-assoc", "links": ["c1inner", "c1", "c2inner", "c2", "apply1", "apply2", "aassoc"], "x": 0, "y": 700,
+   "text": "結合則: 3つの関数の合成は、どこから合成しても同じ関数になります。(f∘g)∘h = f∘(g∘h)。足し算の (1+2)+3 = 1+(2+3) と同じ性質が、関数にもあります。"
+  }
+ ],
+ "functions": [
+  {
+   "id": "fn-double",
+   "name": "2倍にする",
+   "description": "n を2倍にして返します",
+   "params": [{ "key": "p1", "label": "n" }],
+   "results": [{ "key": "r1", "label": "result" }],
+   "nodes": [
+    { "id": "fs", "nodeId": "FunctionStart", "x": 0, "y": 0, "config": {} },
+    {
+     "id": "mul", "nodeId": "MathOperation", "x": 350, "y": 0,
+     "config": { "operation": { "type": "value", "value": "multiply" }, "n2": { "type": "value", "value": 2 } }
+    },
+    { "id": "fe", "nodeId": "FunctionEnd", "x": 700, "y": 0, "config": {} }
+   ],
+   "connections": [
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "mul", "input": "n1" } },
+    { "from": { "nodeId": "mul", "output": "result" }, "to": { "nodeId": "fe", "input": "r1" } }
+   ]
+  },
+  {
+   "id": "fn-addten",
+   "name": "10を足す",
+   "description": "n に 10 を足して返します",
+   "params": [{ "key": "p1", "label": "n" }],
+   "results": [{ "key": "r1", "label": "result" }],
+   "nodes": [
+    { "id": "fs", "nodeId": "FunctionStart", "x": 0, "y": 0, "config": {} },
+    {
+     "id": "add", "nodeId": "MathOperation", "x": 350, "y": 0,
+     "config": { "operation": { "type": "value", "value": "add" }, "n2": { "type": "value", "value": 10 } }
+    },
+    { "id": "fe", "nodeId": "FunctionEnd", "x": 700, "y": 0, "config": {} }
+   ],
+   "connections": [
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "add", "input": "n1" } },
+    { "from": { "nodeId": "add", "output": "result" }, "to": { "nodeId": "fe", "input": "r1" } }
+   ]
+  }
+ ]
+}

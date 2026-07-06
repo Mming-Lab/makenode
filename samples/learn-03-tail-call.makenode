@@ -1,0 +1,135 @@
+{
+ "version": 2,
+ "nodes": [
+  {
+   "id": "calltail", "nodeId": "FunctionCall", "x": 0, "y": 0,
+   "config": {
+    "functionId": { "type": "value", "value": "fn-sum-tail" },
+    "p1": { "type": "value", "value": 5000 },
+    "p2": { "type": "value", "value": 0 }
+   }
+  },
+  {
+   "id": "logtail", "nodeId": "LogValue", "x": 400, "y": 0,
+   "config": { "label": { "type": "value", "value": "末尾再帰 sum(5000)" } }
+  },
+  {
+   "id": "callnon", "nodeId": "FunctionCall", "x": 0, "y": 350,
+   "config": {
+    "functionId": { "type": "value", "value": "fn-sum-nontail" },
+    "p1": { "type": "value", "value": 5000 }
+   }
+  },
+  {
+   "id": "lognon", "nodeId": "LogValue", "x": 400, "y": 350,
+   "config": { "label": { "type": "value", "value": "非末尾 sum(5000)" } }
+  }
+ ],
+ "connections": [
+  { "from": { "nodeId": "calltail", "output": "r1" }, "to": { "nodeId": "logtail", "input": "value" } },
+  { "from": { "nodeId": "callnon", "output": "r1" }, "to": { "nodeId": "lognon", "input": "value" } }
+ ],
+ "comments": [
+  {
+   "id": "c-title", "x": 0, "y": -300, "links": [],
+   "text": "教材03: 末尾再帰 — 深い再帰でも動く書き方\n同じ「1〜n の合計」を2通りの再帰で書いています。n=5000 で実行すると、\n上（末尾再帰）は 12502500 を返しますが、下（非末尾）は「再帰が深すぎます」で止まります。\n違いは「再帰呼び出しの結果に、あとから計算を足すかどうか」です。"
+  },
+  {
+   "id": "c-tail", "links": ["calltail", "logtail"], "x": 0, "y": 0,
+   "text": "末尾版: sum(n, acc) = n が 0 以下なら acc、そうでなければ sum(n−1, acc+n)。呼び出しの結果を「そのまま返す」だけなので、途中の計算を覚えておく必要がなく、何回でも繰り返せます（アキュムレータ acc に途中結果を渡す）。"
+  },
+  {
+   "id": "c-nontail", "links": ["callnon", "lognon"], "x": 0, "y": 350,
+   "text": "非末尾版: sum(n) = n + sum(n−1)。呼び出しの結果に「n を足す」仕事が残るため、呼び出しの記録（スタック）が n 個積み上がり、深さの上限（1000）で止まります。これはバグではなく、コンピュータの仕組みの学習ポイントです。"
+  }
+ ],
+ "functions": [
+  {
+   "id": "fn-sum-tail",
+   "name": "合計（末尾再帰）",
+   "description": "sum(n, acc): n が 0 以下なら acc、そうでなければ sum(n-1, acc+n)。末尾呼び出しなので深さ上限に掛からない",
+   "params": [
+    { "key": "p1", "label": "n" },
+    { "key": "p2", "label": "acc" }
+   ],
+   "results": [{ "key": "r1", "label": "result" }],
+   "nodes": [
+    { "id": "fs", "nodeId": "FunctionStart", "x": 0, "y": 0, "config": {} },
+    {
+     "id": "cmp", "nodeId": "MathOperation", "x": 350, "y": 0,
+     "config": { "operation": { "type": "value", "value": "lessThanOrEqual" }, "n2": { "type": "value", "value": 0 } }
+    },
+    {
+     "id": "sub", "nodeId": "MathOperation", "x": 350, "y": 250,
+     "config": { "operation": { "type": "value", "value": "subtract" }, "n2": { "type": "value", "value": 1 } }
+    },
+    {
+     "id": "acc", "nodeId": "MathOperation", "x": 350, "y": 450,
+     "config": { "operation": { "type": "value", "value": "add" } }
+    },
+    {
+     "id": "call", "nodeId": "FunctionCall", "x": 700, "y": 250,
+     "config": { "functionId": { "type": "value", "value": "fn-sum-tail" } }
+    },
+    {
+     "id": "ifv", "nodeId": "IfValue", "x": 1050, "y": 0,
+     "config": {}
+    },
+    { "id": "fe", "nodeId": "FunctionEnd", "x": 1400, "y": 0, "config": {} }
+   ],
+   "connections": [
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "cmp", "input": "n1" } },
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "sub", "input": "n1" } },
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "acc", "input": "n1" } },
+    { "from": { "nodeId": "fs", "output": "p2" }, "to": { "nodeId": "acc", "input": "n2" } },
+    { "from": { "nodeId": "sub", "output": "result" }, "to": { "nodeId": "call", "input": "p1" } },
+    { "from": { "nodeId": "acc", "output": "result" }, "to": { "nodeId": "call", "input": "p2" } },
+    { "from": { "nodeId": "cmp", "output": "result" }, "to": { "nodeId": "ifv", "input": "condition" } },
+    { "from": { "nodeId": "fs", "output": "p2" }, "to": { "nodeId": "ifv", "input": "thenValue" } },
+    { "from": { "nodeId": "call", "output": "r1" }, "to": { "nodeId": "ifv", "input": "elseValue" } },
+    { "from": { "nodeId": "ifv", "output": "result" }, "to": { "nodeId": "fe", "input": "r1" } }
+   ]
+  },
+  {
+   "id": "fn-sum-nontail",
+   "name": "合計（非末尾）",
+   "description": "sum(n): n が 0 以下なら 0、そうでなければ n + sum(n-1)。呼び出し後に足し算が残るため深さ上限（1000）に掛かる",
+   "params": [{ "key": "p1", "label": "n" }],
+   "results": [{ "key": "r1", "label": "result" }],
+   "nodes": [
+    { "id": "fs", "nodeId": "FunctionStart", "x": 0, "y": 0, "config": {} },
+    {
+     "id": "cmp", "nodeId": "MathOperation", "x": 350, "y": 0,
+     "config": { "operation": { "type": "value", "value": "lessThanOrEqual" }, "n2": { "type": "value", "value": 0 } }
+    },
+    {
+     "id": "sub", "nodeId": "MathOperation", "x": 350, "y": 250,
+     "config": { "operation": { "type": "value", "value": "subtract" }, "n2": { "type": "value", "value": 1 } }
+    },
+    {
+     "id": "call", "nodeId": "FunctionCall", "x": 700, "y": 250,
+     "config": { "functionId": { "type": "value", "value": "fn-sum-nontail" } }
+    },
+    {
+     "id": "add", "nodeId": "MathOperation", "x": 1050, "y": 250,
+     "config": { "operation": { "type": "value", "value": "add" } }
+    },
+    {
+     "id": "ifv", "nodeId": "IfValue", "x": 1050, "y": 0,
+     "config": { "thenValue": { "type": "value", "value": 0 } }
+    },
+    { "id": "fe", "nodeId": "FunctionEnd", "x": 1400, "y": 0, "config": {} }
+   ],
+   "connections": [
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "cmp", "input": "n1" } },
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "sub", "input": "n1" } },
+    { "from": { "nodeId": "sub", "output": "result" }, "to": { "nodeId": "call", "input": "p1" } },
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "add", "input": "n1" } },
+    { "from": { "nodeId": "call", "output": "r1" }, "to": { "nodeId": "add", "input": "n2" } },
+    { "from": { "nodeId": "cmp", "output": "result" }, "to": { "nodeId": "ifv", "input": "condition" } },
+    { "from": { "nodeId": "add", "output": "result" }, "to": { "nodeId": "ifv", "input": "elseValue" } },
+    { "from": { "nodeId": "ifv", "output": "result" }, "to": { "nodeId": "fe", "input": "r1" } }
+   ]
+  }
+ ]
+}

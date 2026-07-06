@@ -1,0 +1,108 @@
+{
+ "version": 2,
+ "nodes": [
+  {
+   "id": "nameok", "nodeId": "Value", "x": 0, "y": 0,
+   "config": { "value": { "type": "value", "value": "steve" } }
+  },
+  {
+   "id": "emptyok", "nodeId": "StringOperation", "x": 350, "y": 100,
+   "config": { "operation": { "type": "value", "value": "isEmpty" } }
+  },
+  {
+   "id": "upok", "nodeId": "StringOperation", "x": 350, "y": 300,
+   "config": { "operation": { "type": "value", "value": "toUpperCase" } }
+  },
+  {
+   "id": "failok", "nodeId": "Fail", "x": 350, "y": -100,
+   "config": { "message": { "type": "value", "value": "名前が空です" } }
+  },
+  { "id": "checkok", "nodeId": "IfValue", "x": 700, "y": 0, "config": {} },
+  { "id": "attok", "nodeId": "Attempt", "x": 1050, "y": 0, "config": {} },
+  {
+   "id": "logok", "nodeId": "LogValue", "x": 1400, "y": -80,
+   "config": { "label": { "type": "value", "value": "成功の線" } }
+  },
+  {
+   "id": "logokerr", "nodeId": "LogValue", "x": 1400, "y": 120,
+   "config": { "label": { "type": "value", "value": "失敗の線（こちらは動かない）" } }
+  },
+  {
+   "id": "namebad", "nodeId": "Value", "x": 0, "y": 700,
+   "config": { "value": { "type": "value", "value": "" } }
+  },
+  {
+   "id": "emptybad", "nodeId": "StringOperation", "x": 350, "y": 800,
+   "config": { "operation": { "type": "value", "value": "isEmpty" } }
+  },
+  {
+   "id": "upbad", "nodeId": "StringOperation", "x": 350, "y": 1000,
+   "config": { "operation": { "type": "value", "value": "toUpperCase" } }
+  },
+  {
+   "id": "failbad", "nodeId": "Fail", "x": 350, "y": 600,
+   "config": { "message": { "type": "value", "value": "名前が空です" } }
+  },
+  { "id": "checkbad", "nodeId": "IfValue", "x": 700, "y": 700, "config": {} },
+  { "id": "attbad", "nodeId": "Attempt", "x": 1050, "y": 700, "config": {} },
+  {
+   "id": "logbadok", "nodeId": "LogValue", "x": 1400, "y": 620,
+   "config": { "label": { "type": "value", "value": "成功の線（こちらは動かない）" } }
+  },
+  {
+   "id": "logbaderr", "nodeId": "LogValue", "x": 1400, "y": 820,
+   "config": { "label": { "type": "value", "value": "失敗の理由" } }
+  },
+  {
+   "id": "lognaive", "nodeId": "LogValue", "x": 1050, "y": 1000,
+   "config": { "label": { "type": "value", "value": "そのまま繋いだノード（⊘ になる）" } }
+  },
+  {
+   "id": "orelse", "nodeId": "OrElse", "x": 1050, "y": 1250,
+   "config": { "fallback": { "type": "value", "value": "ゲスト" } }
+  },
+  {
+   "id": "logdefault", "nodeId": "LogValue", "x": 1400, "y": 1250,
+   "config": { "label": { "type": "value", "value": "だめなら既定値" } }
+  }
+ ],
+ "connections": [
+  { "from": { "nodeId": "nameok", "output": "value" }, "to": { "nodeId": "emptyok", "input": "string" } },
+  { "from": { "nodeId": "nameok", "output": "value" }, "to": { "nodeId": "upok", "input": "string" } },
+  { "from": { "nodeId": "emptyok", "output": "value" }, "to": { "nodeId": "checkok", "input": "condition" } },
+  { "from": { "nodeId": "failok", "output": "result" }, "to": { "nodeId": "checkok", "input": "thenValue" } },
+  { "from": { "nodeId": "upok", "output": "value" }, "to": { "nodeId": "checkok", "input": "elseValue" } },
+  { "from": { "nodeId": "checkok", "output": "result" }, "to": { "nodeId": "attok", "input": "value" } },
+  { "from": { "nodeId": "attok", "output": "ok" }, "to": { "nodeId": "logok", "input": "value" } },
+  { "from": { "nodeId": "attok", "output": "error" }, "to": { "nodeId": "logokerr", "input": "value" } },
+  { "from": { "nodeId": "namebad", "output": "value" }, "to": { "nodeId": "emptybad", "input": "string" } },
+  { "from": { "nodeId": "namebad", "output": "value" }, "to": { "nodeId": "upbad", "input": "string" } },
+  { "from": { "nodeId": "emptybad", "output": "value" }, "to": { "nodeId": "checkbad", "input": "condition" } },
+  { "from": { "nodeId": "failbad", "output": "result" }, "to": { "nodeId": "checkbad", "input": "thenValue" } },
+  { "from": { "nodeId": "upbad", "output": "value" }, "to": { "nodeId": "checkbad", "input": "elseValue" } },
+  { "from": { "nodeId": "checkbad", "output": "result" }, "to": { "nodeId": "attbad", "input": "value" } },
+  { "from": { "nodeId": "attbad", "output": "ok" }, "to": { "nodeId": "logbadok", "input": "value" } },
+  { "from": { "nodeId": "attbad", "output": "error" }, "to": { "nodeId": "logbaderr", "input": "value" } },
+  { "from": { "nodeId": "checkbad", "output": "result" }, "to": { "nodeId": "lognaive", "input": "value" } },
+  { "from": { "nodeId": "checkbad", "output": "result" }, "to": { "nodeId": "orelse", "input": "value" } },
+  { "from": { "nodeId": "orelse", "output": "result" }, "to": { "nodeId": "logdefault", "input": "value" } }
+ ],
+ "comments": [
+  {
+   "id": "c-title", "x": 0, "y": -400, "links": [],
+   "text": "教材04: 鉄道指向 — 失敗も「値」として扱う\n名前を「検証 → 大文字に加工 → 結果」の順に処理します。処理は成功の線と失敗の線の\n二本のレール（鉄道）に分かれ、失敗してもプログラム全体は止まりません。\n実行して、下の段のノードに付く ⊘ マーク（素通りの印）を観察してください。"
+  },
+  {
+   "id": "c-ok", "links": ["nameok", "emptyok", "upok", "failok", "checkok", "attok", "logok", "logokerr"], "x": 0, "y": 0,
+   "text": "成功する例: 名前 'steve' は空でないので、大文字 'STEVE' に加工され、「結果に分ける」の成功側から出てきます。"
+  },
+  {
+   "id": "c-bad", "links": ["namebad", "emptybad", "upbad", "failbad", "checkbad", "attbad", "logbadok", "logbaderr", "lognaive"], "x": 0, "y": 700,
+   "text": "わざと失敗する例: 名前が空なので「失敗を作る」が動き、理由『名前が空です』が失敗の線を流れます。「結果に分ける」で受ければ理由を表示でき、そのまま繋いだノードは実行されず ⊘ になります（エラーで止まるのではなく、静かに素通りする＝鉄道指向）。"
+  },
+  {
+   "id": "c-orelse", "links": ["orelse", "logdefault"], "x": 1050, "y": 1250,
+   "text": "「だめなら」は失敗の線の合流点: 本命（検証結果）が失敗したら、代わりの値 'ゲスト' を返します。"
+  }
+ ]
+}

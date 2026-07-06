@@ -1,0 +1,125 @@
+{
+ "version": 2,
+ "nodes": [
+  {
+   "id": "callfact", "nodeId": "FunctionCall", "x": 0, "y": 0,
+   "config": {
+    "functionId": { "type": "value", "value": "fn-fact" },
+    "p1": { "type": "value", "value": 5 }
+   }
+  },
+  {
+   "id": "logfact", "nodeId": "LogValue", "x": 400, "y": 0,
+   "config": { "label": { "type": "value", "value": "5の階乗" } }
+  },
+  {
+   "id": "callsum", "nodeId": "FunctionCall", "x": 0, "y": 300,
+   "config": {
+    "functionId": { "type": "value", "value": "fn-sumlist" },
+    "p1": { "type": "value", "value": [1, 2, 3, 4] }
+   }
+  },
+  {
+   "id": "logsum", "nodeId": "LogValue", "x": 400, "y": 300,
+   "config": { "label": { "type": "value", "value": "リストの合計" } }
+  }
+ ],
+ "connections": [
+  { "from": { "nodeId": "callfact", "output": "r1" }, "to": { "nodeId": "logfact", "input": "value" } },
+  { "from": { "nodeId": "callsum", "output": "r1" }, "to": { "nodeId": "logsum", "input": "value" } }
+ ],
+ "comments": [
+  {
+   "id": "c-title", "x": 0, "y": -280, "links": [],
+   "text": "教材02: 再帰 — 関数が自分自身を呼ぶ\n「階乗」と「リストの合計」の2つの関数を再帰で書いています。\n関数の定義を開いて（呼び出しノードを右クリック）、中の「もし〜なら」ノードを見てください。\n再帰には必ず「停止条件」（これ以上呼ばない条件）が要ります。"
+  },
+  {
+   "id": "c-fact", "links": ["callfact", "logfact"], "x": 0, "y": 0,
+   "text": "階乗: 5! = 5×4×3×2×1 = 120。定義の中では「n が 1 以下なら 1、そうでなければ n × (n−1 の階乗)」と書いています。"
+  },
+  {
+   "id": "c-sum", "links": ["callsum", "logsum"], "x": 0, "y": 300,
+   "text": "リストの合計: 「空なら 0、そうでなければ 先頭 + 残りの合計」。先頭（First）と残り（Rest）に分けるのが、リスト再帰の基本の形です。"
+  }
+ ],
+ "functions": [
+  {
+   "id": "fn-fact",
+   "name": "階乗",
+   "description": "n! を再帰で計算します（停止条件: n が 1 以下なら 1）",
+   "params": [{ "key": "p1", "label": "n" }],
+   "results": [{ "key": "r1", "label": "result" }],
+   "nodes": [
+    { "id": "fs", "nodeId": "FunctionStart", "x": 0, "y": 0, "config": {} },
+    {
+     "id": "cmp", "nodeId": "MathOperation", "x": 350, "y": 0,
+     "config": { "operation": { "type": "value", "value": "lessThanOrEqual" }, "n2": { "type": "value", "value": 1 } }
+    },
+    {
+     "id": "sub", "nodeId": "MathOperation", "x": 350, "y": 250,
+     "config": { "operation": { "type": "value", "value": "subtract" }, "n2": { "type": "value", "value": 1 } }
+    },
+    {
+     "id": "call", "nodeId": "FunctionCall", "x": 700, "y": 250,
+     "config": { "functionId": { "type": "value", "value": "fn-fact" } }
+    },
+    {
+     "id": "mul", "nodeId": "MathOperation", "x": 1050, "y": 250,
+     "config": { "operation": { "type": "value", "value": "multiply" } }
+    },
+    {
+     "id": "ifv", "nodeId": "IfValue", "x": 1050, "y": 0,
+     "config": { "thenValue": { "type": "value", "value": 1 } }
+    },
+    { "id": "fe", "nodeId": "FunctionEnd", "x": 1400, "y": 0, "config": {} }
+   ],
+   "connections": [
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "cmp", "input": "n1" } },
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "sub", "input": "n1" } },
+    { "from": { "nodeId": "sub", "output": "result" }, "to": { "nodeId": "call", "input": "p1" } },
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "mul", "input": "n1" } },
+    { "from": { "nodeId": "call", "output": "r1" }, "to": { "nodeId": "mul", "input": "n2" } },
+    { "from": { "nodeId": "cmp", "output": "result" }, "to": { "nodeId": "ifv", "input": "condition" } },
+    { "from": { "nodeId": "mul", "output": "result" }, "to": { "nodeId": "ifv", "input": "elseValue" } },
+    { "from": { "nodeId": "ifv", "output": "result" }, "to": { "nodeId": "fe", "input": "r1" } }
+   ]
+  },
+  {
+   "id": "fn-sumlist",
+   "name": "リストの合計",
+   "description": "先頭＋残りの合計、を繰り返す構造再帰（停止条件: 空リストなら 0）",
+   "params": [{ "key": "p1", "label": "list" }],
+   "results": [{ "key": "r1", "label": "result" }],
+   "nodes": [
+    { "id": "fs", "nodeId": "FunctionStart", "x": 0, "y": 0, "config": {} },
+    { "id": "empty", "nodeId": "ListIsEmpty", "x": 350, "y": 0, "config": {} },
+    { "id": "first", "nodeId": "ListFirst", "x": 350, "y": 250, "config": {} },
+    { "id": "rest", "nodeId": "ListRest", "x": 350, "y": 450, "config": {} },
+    {
+     "id": "call", "nodeId": "FunctionCall", "x": 700, "y": 450,
+     "config": { "functionId": { "type": "value", "value": "fn-sumlist" } }
+    },
+    {
+     "id": "add", "nodeId": "MathOperation", "x": 1050, "y": 250,
+     "config": { "operation": { "type": "value", "value": "add" } }
+    },
+    {
+     "id": "ifv", "nodeId": "IfValue", "x": 1050, "y": 0,
+     "config": { "thenValue": { "type": "value", "value": 0 } }
+    },
+    { "id": "fe", "nodeId": "FunctionEnd", "x": 1400, "y": 0, "config": {} }
+   ],
+   "connections": [
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "empty", "input": "list" } },
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "first", "input": "list" } },
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "rest", "input": "list" } },
+    { "from": { "nodeId": "rest", "output": "rest" }, "to": { "nodeId": "call", "input": "p1" } },
+    { "from": { "nodeId": "first", "output": "first" }, "to": { "nodeId": "add", "input": "n1" } },
+    { "from": { "nodeId": "call", "output": "r1" }, "to": { "nodeId": "add", "input": "n2" } },
+    { "from": { "nodeId": "empty", "output": "isEmpty" }, "to": { "nodeId": "ifv", "input": "condition" } },
+    { "from": { "nodeId": "add", "output": "result" }, "to": { "nodeId": "ifv", "input": "elseValue" } },
+    { "from": { "nodeId": "ifv", "output": "result" }, "to": { "nodeId": "fe", "input": "r1" } }
+   ]
+  }
+ ]
+}
