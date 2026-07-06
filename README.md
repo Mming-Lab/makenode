@@ -2,8 +2,8 @@
 
 # MakeNode (Beta)
 
-A kid-friendly visual programming tool for Minecraft Education Edition.
-Connect nodes to control Minecraft — a Scratch / Flyde–style node editor.
+A node-based visual programming tool for Minecraft Education and Bedrock Edition.
+Connect nodes to control Minecraft.
 
 > ⚠️ **This is a beta.** It is not fully tested yet, so it may be unstable and its behavior may change.
 > Please save your work often, and report any problems on the [Issues](../../issues) page.

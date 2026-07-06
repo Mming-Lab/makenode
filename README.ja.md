@@ -2,8 +2,8 @@
 
 # MakeNode（ベータ版）
 
-Minecraft Education Edition 向けの、子ども向けビジュアルプログラミングツールです。
-ノードをつないで Minecraft を動かせます（Scratch / Flyde 的なノードエディタ）。
+Minecraft Education Edition および Bedrock Edition 向けの、ノードベースのビジュアルプログラミングツールです。
+ノードをつないで Minecraft を動かせます。
 
 > ⚠️ **ベータ版です。** まだテストが十分ではなく、動作が不安定だったり、今後仕様が変わることがあります。
 > 大事なデータはこまめに保存してください。不具合を見つけたら [Issue](../../issues) で教えていただけると助かります。
