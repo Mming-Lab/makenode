@@ -1,0 +1,90 @@
+{
+ "version": 2,
+ "nodes": [
+  {
+   "id": "events", "nodeId": "LoopList", "x": 0, "y": 200,
+   "config": { "list": { "type": "value", "value": ["すすむ", "すすむ", "リセット", "すすむ"] } }
+  },
+  {
+   "id": "isreset", "nodeId": "Compare", "x": 300, "y": 350,
+   "config": { "op": { "type": "value", "value": "EQUAL" }, "right": { "type": "value", "value": "リセット" } }
+  },
+  { "id": "route", "nodeId": "Conditional", "x": 550, "y": 200, "config": {} },
+  { "id": "refnext", "nodeId": "FunctionRef", "x": 550, "y": 450, "config": { "functionId": { "type": "value", "value": "fn-next-color" } } },
+  {
+   "id": "state", "nodeId": "FoldEvents", "x": 850, "y": 200,
+   "config": { "initial": { "type": "value", "value": "青" } }
+  },
+  {
+   "id": "logcolor", "nodeId": "LogValue", "x": 1150, "y": 350,
+   "config": { "label": { "type": "value", "value": "信号の色" } }
+  },
+  {
+   "id": "collect", "nodeId": "Collect", "x": 1150, "y": 100,
+   "config": { "count": { "type": "value", "value": 4 } }
+  },
+  {
+   "id": "check", "nodeId": "Assert", "x": 1450, "y": 100,
+   "config": {
+    "expected": { "type": "value", "value": ["黄", "赤", "青", "黄"] },
+    "op": { "type": "value", "value": "deep" },
+    "testId": { "type": "value", "value": "TC-FSM1 信号機: すすむ→黄→赤 / リセット→青 / すすむ→黄" }
+   }
+  }
+ ],
+ "connections": [
+  { "from": { "nodeId": "events", "output": "item" }, "to": { "nodeId": "isreset", "input": "left" } },
+  { "from": { "nodeId": "events", "output": "item" }, "to": { "nodeId": "route", "input": "value" } },
+  { "from": { "nodeId": "isreset", "output": "result" }, "to": { "nodeId": "route", "input": "condition" } },
+  { "from": { "nodeId": "route", "output": "false" }, "to": { "nodeId": "state", "input": "value" } },
+  { "from": { "nodeId": "route", "output": "true" }, "to": { "nodeId": "state", "input": "reset" } },
+  { "from": { "nodeId": "refnext", "output": "fn" }, "to": { "nodeId": "state", "input": "fn" } },
+  { "from": { "nodeId": "state", "output": "acc" }, "to": { "nodeId": "logcolor", "input": "value" } },
+  { "from": { "nodeId": "state", "output": "acc" }, "to": { "nodeId": "collect", "input": "value" } },
+  { "from": { "nodeId": "collect", "output": "list" }, "to": { "nodeId": "check", "input": "actual" } }
+ ],
+ "comments": [
+  {
+   "id": "c-main", "links": ["events", "isreset", "route", "state", "logcolor", "collect", "check", "refnext"], "x": 0, "y": 0,
+   "text": "教材06: 状態機械（ステートマシン）\n信号機の色（青→黄→赤→青…）を「状態」として持ち、イベントが届くたびに遷移関数で次の色へ進みます。⏯ コマ送りで実行すると、イベント1つごとに状態が変わる様子を1歩ずつ観察できます。最後の確認ノードが「黄→赤→青→黄」の順になることを確かめます。"
+  },
+  {
+   "id": "c-state", "links": ["state", "refnext"], "x": 550, "y": 620,
+   "text": "状態の持ち方: イベント集計（Fold）が「今の色」を覚えていて、値が届くたびに遷移関数（＠次の色）で次の色に置き換えます。変数を自分で読み書きしなくても、状態機械が作れます。"
+  },
+  {
+   "id": "c-reset", "links": ["isreset", "route"], "x": 0, "y": 480,
+   "text": "リセットの線: 「リセット」というイベントだけを比較＋条件分岐で より分けて、イベント集計のリセット入力へ送ります。リセットが届くと色は初期値（青）に戻ります。"
+  }
+ ],
+ "functions": [
+  {
+   "id": "fn-next-color",
+   "name": "次の色",
+   "description": "信号機の遷移関数: 青→黄→赤→青",
+   "params": [
+    { "key": "p1", "label": "今の色" },
+    { "key": "p2", "label": "イベント" }
+   ],
+   "results": [{ "key": "r1", "label": "次の色" }],
+   "nodes": [
+    { "id": "fs", "nodeId": "FunctionStart", "x": 0, "y": 0, "config": {} },
+    {
+     "id": "match", "nodeId": "Match", "x": 350, "y": 0,
+     "config": {
+      "case1": { "type": "value", "value": "青" },
+      "then1": { "type": "value", "value": "黄" },
+      "case2": { "type": "value", "value": "黄" },
+      "then2": { "type": "value", "value": "赤" },
+      "otherwise": { "type": "value", "value": "青" }
+     }
+    },
+    { "id": "fe", "nodeId": "FunctionEnd", "x": 700, "y": 0, "config": {} }
+   ],
+   "connections": [
+    { "from": { "nodeId": "fs", "output": "p1" }, "to": { "nodeId": "match", "input": "value" } },
+    { "from": { "nodeId": "match", "output": "result" }, "to": { "nodeId": "fe", "input": "r1" } }
+   ]
+  }
+ ]
+}
