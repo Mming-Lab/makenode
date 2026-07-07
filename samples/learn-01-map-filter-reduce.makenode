@@ -31,10 +31,7 @@
    "id": "cmp", "nodeId": "MathOperation", "x": 700, "y": 800,
    "config": { "operation": { "type": "value", "value": "greaterThan" }, "n2": { "type": "value", "value": 5 } }
   },
-  {
-   "id": "pick", "nodeId": "IfValue", "x": 1050, "y": 600,
-   "config": { "elseValue": { "type": "value", "value": 0 } }
-  },
+  { "id": "pick", "nodeId": "Conditional", "x": 1050, "y": 600, "config": {} },
   {
    "id": "getsum", "nodeId": "GetGlobalState", "x": 1050, "y": 850,
    "config": { "key": { "type": "value", "value": "sum" }, "defaultValue": { "type": "value", "value": 0 } }
@@ -64,9 +61,9 @@
   { "from": { "nodeId": "loop", "output": "item" }, "to": { "nodeId": "mul", "input": "n1" } },
   { "from": { "nodeId": "mul", "output": "result" }, "to": { "nodeId": "cmp", "input": "n1" } },
   { "from": { "nodeId": "cmp", "output": "result" }, "to": { "nodeId": "pick", "input": "condition" } },
-  { "from": { "nodeId": "mul", "output": "result" }, "to": { "nodeId": "pick", "input": "thenValue" } },
+  { "from": { "nodeId": "mul", "output": "result" }, "to": { "nodeId": "pick", "input": "value" } },
   { "from": { "nodeId": "getsum", "output": "value" }, "to": { "nodeId": "addsum", "input": "n1" } },
-  { "from": { "nodeId": "pick", "output": "result" }, "to": { "nodeId": "addsum", "input": "n2" } },
+  { "from": { "nodeId": "pick", "output": "true" }, "to": { "nodeId": "addsum", "input": "n2" } },
   { "from": { "nodeId": "addsum", "output": "result" }, "to": { "nodeId": "setsum", "input": "value" } },
   { "from": { "nodeId": "setsum", "output": "setValue" }, "to": { "nodeId": "logi", "input": "value" } }
  ],
@@ -81,7 +78,7 @@
   },
   {
    "id": "c-imp", "links": ["range2", "loop", "mul", "cmp", "pick", "getsum", "addsum", "setsum", "logi"], "x": 0, "y": 600,
-   "text": "命令的（ループと変数）: 1個ずつ取り出して、変数 sum に足し込みます。同じ結果ですが、ノードの数が増え、変数の状態を頭の中で追いかける必要があります。"
+   "text": "命令的（ループと変数）: 1個ずつ取り出して、5より大きいときだけ変数 sum に足し込みます。同じ結果ですが、ノードの数が増え、変数の状態を頭の中で追いかける必要があります。"
   }
  ],
  "functions": [
