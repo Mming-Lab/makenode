@@ -1,0 +1,136 @@
+{
+ "version": 2,
+ "nodes": [
+  {
+   "id": "connect", "nodeId": "MinecraftConnect", "x": 0, "y": -260,
+   "config": { "port": { "type": "value", "value": 8080 } }
+  },
+  {
+   "id": "ref-greet", "nodeId": "FunctionRef", "x": 0, "y": 0,
+   "config": { "functionId": { "type": "value", "value": "fn-greet" } }
+  },
+  {
+   "id": "expose-greet", "nodeId": "McpExpose", "x": 380, "y": 0,
+   "config": { "description": { "type": "value", "value": "名前を渡すと、日本語のあいさつ文を返します" } }
+  },
+  {
+   "id": "ref-dice", "nodeId": "FunctionRef", "x": 0, "y": 200,
+   "config": { "functionId": { "type": "value", "value": "fn-dice" } }
+  },
+  {
+   "id": "expose-dice", "nodeId": "McpExpose", "x": 380, "y": 200,
+   "config": {}
+  },
+  {
+   "id": "ref-dome", "nodeId": "FunctionRef", "x": 0, "y": 400,
+   "config": { "functionId": { "type": "value", "value": "fn-dome" } }
+  },
+  {
+   "id": "expose-dome", "nodeId": "McpExpose", "x": 380, "y": 400,
+   "config": { "description": { "type": "value", "value": "指定した中心位置に、指定したブロックで中空のドーム（球）を建てます。Minecraft に接続しているときだけ成功します。ブロックIDの例: minecraft:glass" } }
+  }
+ ],
+ "connections": [
+  { "from": { "nodeId": "ref-greet", "output": "fn" }, "to": { "nodeId": "expose-greet", "input": "fn" } },
+  { "from": { "nodeId": "ref-dice", "output": "fn" }, "to": { "nodeId": "expose-dice", "input": "fn" } },
+  { "from": { "nodeId": "ref-dome", "output": "fn" }, "to": { "nodeId": "expose-dome", "input": "fn" } }
+ ],
+ "comments": [
+  {
+   "id": "c-usage",
+   "text": "AI にツールを渡すサンプルです（MCP）。\n① 実行 ▶ を押します。この時点で3つの関数が AI に公開されます\n② ツールバーの「AI 連携」を開き、登録コマンドをコピーして Claude Code などの MCP クライアントに貼り付けます\n③ AI に「サイコロをふって」「(0, 80, 0) にガラスのドームを建てて」のように話しかけます\n※ ドームを建てるには、ゲーム内で /connect localhost:8080 の接続も必要です（あいさつとサイコロは接続なしで動きます）",
+   "links": [],
+   "x": -740, "y": -260
+  },
+  {
+   "id": "c-expose",
+   "text": "「＠関数名 → AI に公開」の配線が公開の宣言です。何が AI に渡るかは、このキャンバスを見ればわかります。公開されるのはフローの実行中だけで、停止 ■ を押すと AI からは見えなくなります",
+   "links": ["ref-greet", "expose-greet", "ref-dice", "expose-dice", "ref-dome", "expose-dome"],
+   "x": 0, "y": 0
+  }
+ ],
+ "functions": [
+  {
+   "id": "fn-greet",
+   "name": "あいさつ",
+   "description": "名前を受け取って、あいさつ文を返します",
+   "params": [ { "key": "p1", "label": "名前", "type": "string" } ],
+   "results": [ { "key": "r1", "label": "あいさつ文", "type": "string" } ],
+   "nodes": [
+    { "id": "greet-fs", "nodeId": "FunctionStart", "x": 0, "y": 0, "config": {} },
+    {
+     "id": "greet-c1", "nodeId": "Concat", "x": 300, "y": 0,
+     "config": { "a": { "type": "value", "value": "こんにちは、" } }
+    },
+    {
+     "id": "greet-c2", "nodeId": "Concat", "x": 600, "y": 0,
+     "config": { "b": { "type": "value", "value": "さん！MakeNode へようこそ" } }
+    },
+    { "id": "greet-fe", "nodeId": "FunctionEnd", "x": 900, "y": 0, "config": {} }
+   ],
+   "connections": [
+    { "from": { "nodeId": "greet-fs", "output": "p1" }, "to": { "nodeId": "greet-c1", "input": "b" } },
+    { "from": { "nodeId": "greet-c1", "output": "value" }, "to": { "nodeId": "greet-c2", "input": "a" } },
+    { "from": { "nodeId": "greet-c2", "output": "value" }, "to": { "nodeId": "greet-fe", "input": "r1" } }
+   ]
+  },
+  {
+   "id": "fn-dice",
+   "name": "サイコロ",
+   "description": "1 から「面の数」までのランダムな整数を返します",
+   "params": [ { "key": "p1", "label": "面の数", "type": "number" } ],
+   "results": [ { "key": "r1", "label": "出た目", "type": "number" } ],
+   "nodes": [
+    { "id": "dice-fs", "nodeId": "FunctionStart", "x": 0, "y": 0, "config": {} },
+    {
+     "id": "dice-rand", "nodeId": "RandomNumber", "x": 300, "y": 0,
+     "config": {
+      "min": { "type": "value", "value": 1 },
+      "kind": { "type": "value", "value": "integer" }
+     }
+    },
+    { "id": "dice-fe", "nodeId": "FunctionEnd", "x": 600, "y": 0, "config": {} }
+   ],
+   "connections": [
+    { "from": { "nodeId": "dice-fs", "output": "p1" }, "to": { "nodeId": "dice-rand", "input": "max" } },
+    { "from": { "nodeId": "dice-rand", "output": "value" }, "to": { "nodeId": "dice-fe", "input": "r1" } }
+   ]
+  },
+  {
+   "id": "fn-dome",
+   "name": "ドームを建てる",
+   "description": "指定した中心位置に、指定したブロックで中空のドーム（球）を建てます",
+   "params": [
+    { "key": "p1", "label": "中心の位置", "type": "position" },
+    { "key": "p2", "label": "半径", "type": "number" },
+    { "key": "p3", "label": "ブロックID", "type": "string" }
+   ],
+   "results": [ { "key": "r1", "label": "置いたブロック数", "type": "number" } ],
+   "nodes": [
+    { "id": "dome-fs", "nodeId": "FunctionStart", "x": 0, "y": 0, "config": {} },
+    {
+     "id": "dome-shape", "nodeId": "ShapePositions", "x": 300, "y": 0,
+     "config": {
+      "shape": { "type": "value", "value": "sphere" },
+      "hollow": { "type": "value", "value": true }
+     }
+    },
+    {
+     "id": "dome-place", "nodeId": "PlaceBlocksAtPositions", "x": 600, "y": 0,
+     "config": {
+      "mode": { "type": "value", "value": "default" },
+      "wait": { "type": "value", "value": "true" }
+     }
+    },
+    { "id": "dome-fe", "nodeId": "FunctionEnd", "x": 900, "y": 0, "config": {} }
+   ],
+   "connections": [
+    { "from": { "nodeId": "dome-fs", "output": "p1" }, "to": { "nodeId": "dome-shape", "input": "center" } },
+    { "from": { "nodeId": "dome-fs", "output": "p2" }, "to": { "nodeId": "dome-shape", "input": "radius" } },
+    { "from": { "nodeId": "dome-fs", "output": "p3" }, "to": { "nodeId": "dome-place", "input": "block_id" } },
+    { "from": { "nodeId": "dome-shape", "output": "positions" }, "to": { "nodeId": "dome-place", "input": "positions" } },
+    { "from": { "nodeId": "dome-place", "output": "count" }, "to": { "nodeId": "dome-fe", "input": "r1" } }
+   ]
+  }
+ ]
+}
